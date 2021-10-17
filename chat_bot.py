@@ -16,7 +16,7 @@ def send_msg(id, message):
     vk_session.method('messages.send', {'chat_id': id, 'message': message, 'random_id':0 })
 def send_msg_user(id, message):
     vk_session.method('messages.send', {'user_id': id, 'message': message, 'random_id': 0})
-def cmd(text, id, from_):
+def cmd(text, id, from_, peer_id=0):
     global vk_session, check
     text = text[1::]
     text = str(text).lower()
@@ -35,7 +35,7 @@ def cmd(text, id, from_):
 
     angela_in = ['6', 'angela', 'анжела', 'анджела']
 
-    angry_words = '(?:{})'.format('|'.join(['лох','еблан','мудак','долбаеб','гандон','хуесос','мудак','мразь','еблан','хуйло','говноед','железяка','чмо','пидор','пидр','гей','уебище','гондон','клоун','дебил','идиот','даун','придурок','дурак']))
+    angry_words = '(?:{})'.format('|'.join(['лох','еблан','мудак','долбаеб','гандон','хуесос','мудак','мразь','еблан','хуйло','говноед','железяка','чмо','пидор','пидр','гей','уебище','гондон','клоун','дебил','идиот','даун','придурок','дурак','сука']))
 
     happy_words = '(?:{})'.format('|'.join(['молодец', 'красавчик', 'красавец', 'умница', 'хорош', 'крутой', 'лучший', 'красава']))
 
@@ -46,21 +46,23 @@ def cmd(text, id, from_):
     name_bot = '(?:{})'.format('|'.join(['меха-фриц','бот', 'машина','железяка', 'робот', 'автобот', 'десяктикон']))
     
 
-    goroskop = []
+    goroskop = ['9', 'гороскоп']
 
     split_text=text.split()
 
     #СПИСОК
     if split_text[0] in opg_list_in:
-        if event.object.message["from_id"] == 245210027 or event.object.message["from_id"] == 260245693:
-            try:
-                num=int(split_text[1])
-                name = split_text[2].capitalize()
-                opg[num-1]=str(name)
+        try:
+            num=int(split_text[1])
+            name = split_text[2].capitalize()
+            opg[num-1]=str(name)
+            if event.object.message["from_id"] == 245210027 or event.object.message["from_id"] == 260245693:
                 with open('D:/VKBot/opg_list.txt', 'w') as f:
                     f.write(';'.join(opg))
-            except: pass
-        return f'1 -- {opg[0]}\n2 -- {opg[1]}\n3 -- {opg[2]}\n4 -- {opg[3]}\n5 -- {opg[4]}\n6 -- {opg[5]}\n7 -- {opg[6]}\n8 -- {opg[7]}\n9 -- {opg[8]}\n10 -- {opg[9]}'
+                    f'1 -- {opg[0]}\n2 -- {opg[1]}\n3 -- {opg[2]}\n4 -- {opg[3]}\n5 -- {opg[4]}\n6 -- {opg[5]}\n7 -- {opg[6]}\n8 -- {opg[7]}\n9 -- {opg[8]}\n10 -- {opg[9]}'
+            else:return 'Подожди открой список миох пап... Так, тебя там нет => не указывай мне'
+        except: 
+            return f'1 -- {opg[0]}\n2 -- {opg[1]}\n3 -- {opg[2]}\n4 -- {opg[3]}\n5 -- {opg[4]}\n6 -- {opg[5]}\n7 -- {opg[6]}\n8 -- {opg[7]}\n9 -- {opg[8]}\n10 -- {opg[9]}'
 
     #ПОСЛАТЬ КОГО-НИБУДЬ
     elif split_text[0] == '2' or split_text[0] == 'нахуй':
@@ -72,6 +74,7 @@ def cmd(text, id, from_):
         name=name.capitalize()
         msg = random.choice([f'{name}, пошёл нахуй', f'Нахуй идеееетт...\n.\n.\n.\n.\n{name}', f'Вот ты нахуй и пойдешь, быдло ебучее', f'Давайте дружно пошлем нахуй человека по имени "{name}"',f'Обращаюсь к существу "{name}", пошёл ты нахуй'])
         return msg
+
     #АНЕКДОТ
     elif text in fun_in:
         try:
@@ -84,11 +87,21 @@ def cmd(text, id, from_):
         except:
             joke='Сайт с анекдотами накрылся'
         return joke
+
     #ПОМОЩЬ
     elif text in help_in:
-        msg = 'Вот список моих комманд:\n1) Анекдот\n2) Послать кого-нибудь нахуй (можно добавить имя в И.П.)\n3) Список опг\n4) roll [от 1 до 100], можно добавить "дота", "опг", "мать"\n5) Хентай (может появиться сюрприз)\n6) Вспомнить Анжелу\n7) Успокоить + "введите имя в И.П."\n8) Зихте дрихте, переводчик на Немецкий'
+        msg = 'Вот список моих комманд:\n1) Анекдот\n2) Послать кого-нибудь нахуй (можно добавить имя в И.П.)\n3) Список опг\n4) roll [от 1 до 100], можно добавить "дота", "опг", "мать"\n5) Хентай (может появиться сюрприз)\n6) Вспомнить Анжелу\n7) Успокоить + "введите имя в И.П."\n8) Зихте дрихте, переводчик на Немецкий\n9) Гороскоп (введите /9 и свой знак зодиака)'
         return msg
     #ROLL
+
+    elif text=='random chat':
+        all = vk_session.method('messages.getConversationMembers', {'peer_id': peer_id})['profiles']
+        name = random.choice(all)
+        msg = f'https://vk.com/{name["screen_name"]}'
+
+
+        return msg
+
     elif text == 'roll' or text == '4':
         return random.randint(1,101)
 
@@ -114,14 +127,14 @@ def cmd(text, id, from_):
         msgs=[f'{name} Успокойся нахуй', f'{name}, Успокойся пожалуйста. пук-пук',f'Остановись {name}, чего ты добиваешься?','Тише.. Тише..', 'Полегче, брат',f'{name} Приди в себя','Чумба, не наводи суеты']
         return random.choice(msgs)
     #Вкл
-    elif text=='go' and event.object.message["from_id"] == 245210027 or event.object.message["from_id"] == 260245693:
+    elif text=='go' and (event.object.message["from_id"] == 245210027 or event.object.message["from_id"] == 260245693):
         hi = 'Hello World', 'АУЕ','Сау, братья','Вечер в хату'
         check = 1
         return random.choice(hi)
     #ВЫКЛ
     elif text == 'спать' or text =='off' :
         if event.object.message["from_id"] == 245210027 or event.object.message["from_id"] == 260245693:
-            msg = 'Выключаюсь, папуля. Всем спокойной ночи <3'
+            msg = 'Выключаюсь, папуля. Всем спокойной ночи <3\n@id273782101 (Тимофей)  Удачи, на соревах!'
             check = 2
         else:
             msg = 'Ты не мой папа, и даже не второй папа.\nТак что ты мне тут блять не указывай'
@@ -136,7 +149,6 @@ def cmd(text, id, from_):
         if from_=='chat':
             vk_session.method("messages.send", {"chat_id": id, "attachment": d, "random_id": 0})
         else:vk_session.method("messages.send", {"peer_id": id, "attachment": d, "random_id": 0})
-
         return None
 
     #HENTAI
@@ -149,14 +161,30 @@ def cmd(text, id, from_):
         if from_=='chat':
             vk_session.method("messages.send", {"chat_id": id, "attachment": d, "random_id": 0})
         else:vk_session.method("messages.send", {"peer_id": id, "attachment": d, "random_id": 0})
-
-
         return None
+
     elif split_text[0]=='8' or split_text[0]=='переведи':
         print('Translator')
         translator = Translator(from_lang="ru", to_lang='german')
         translation = translator.translate(' '.join(text.split()[1:]))
         return translation
+
+    elif split_text[0] in goroskop:
+        try:
+            znak=split_text[1]
+            znak_tuple={'овен':'aries', 'телец':'taurus', 'близнецы':'gemini','рак':'cancer','лев':'leo','дева':'virgo', 'весы': 'libra','скорпион':'scorpio', 'стрелец':'sagittarius','козерог':'capricorn','водолей':'aquarius','рыбы':'pisces'}
+            try:
+                url=f'https://1001goroskop.ru/?znak={znak_tuple[znak]}'
+                HEADERS = {
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36','accept': '*/*'}
+                r=requests.get(url,headers=HEADERS)
+                soup=bs(r.text,'html.parser')
+                gorsk=soup.find('table', {'id':'eje_text'}).find('p', class_='').text
+                return gorsk
+            except: return 'Или такого знака нет, или упал сайт с гороскопом, или я трахнул ваш компьютер вчера'
+
+        except: return 'Введи знак зодиака'
+
 
     #ПОДДЕРЖАНИЕ ДИАЛОГА
 
@@ -176,7 +204,7 @@ def cmd(text, id, from_):
         msgs = ['Батю не трогай','За батько я и взломать могу', 'Не трожь папу', 'Еще слово в сторону моего отца - я тебя заКИБЕРбулю, сука','Фрыца не трогай','Я зову своего брата']
         return random.choice(msgs)
 
-    elif 'илья' in text or 'илюша' in text or 'али-баба' in text or 'алибаба' in text:
+    elif 'илья' in text or 'илюша' in text or 'али-баба' in text or 'алибаба' in text or 'ильич' in text or 'илью' in text:
         msgs = ['Батю №2 не трогай','За второго батько я и взломать могу', 'Не трожь отца V2.0', 'Еще слово в сторону моих отцов - я тебя заКИБЕРбулю, сука','Али-бабу не трогай','Я зову своего брата']
         return random.choice(msgs)
 
@@ -214,32 +242,42 @@ for event in longpoll.listen():
         txt=event.object.message['text']
         if event.from_chat :
             try:
+                text=event.object.message['text']
+                peer_id=event.object.message['peer_id']
+                from_id=event.object.message["from_id"]
+                print(f'Сообщение {text}, от https://vk.com/id{from_id} из беседы {peer_id}')
                 if txt[0]=='/':
-                    message=cmd(event.object.message['text'],event.chat_id, 'chat')
-                    print(f'check === {check}')
+                    message=cmd(text,event.chat_id, 'chat',peer_id)
+                    
                     if message != None and check>=1:
                         send_msg(
                         id=event.chat_id,
                         message=message,
                         )
+                    print(f'Сообщение {text}, от https://vk.com/id{from_id} из беседы {peer_id}')
 
                 else:
                     pass
-            except: pass
+            except Exception as ex:
+                print(f'\nОшибка в беседе {ex}\n')
 
         elif event.from_user:
             try:
                 if txt[0]=='/':
-                    message=cmd(event.object.message['text'],event.object.message['from_id'],'user')
+                    text=event.object.message['text']
+                    from_id=event.object.message['from_id']
+                    message=cmd(text,event.object.message['from_id'],'user')
 
                     if message != None and check>=1:
                         send_msg_user(
                             id = event.object.message['from_id'],
                             message=message,
                         )
+                    print(f'Сообщение {text}, от https://vk.com/id{from_id}')
                 else:
                     pass
             except Exception as ex:
-                print(ex)
+
+                print(f'\nОшибка в личных сообщениях {ex}\n')
         if check==2:
             check=-1
