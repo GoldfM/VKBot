@@ -11,7 +11,6 @@ longpoll = VkBotLongPoll(vk_session, 207875677)
 
 dota_pick = ['Пудж', 'Течис', 'СФ']
 
-
 def send_msg(id, message, keyboard=None):
     req = {'user_id': id, 'message': message, 'random_id': 0}
     if keyboard != None:
@@ -19,7 +18,7 @@ def send_msg(id, message, keyboard=None):
     vk_session.method('messages.send', req)
 
 
-def game(id, check):
+def game(id, cmd):
     file = f'D:\VKTextGameBot\ID\ID{id}.txt'
     if os.path.exists(file):
         print(f'old -- {id}')
@@ -28,25 +27,27 @@ def game(id, check):
             money = split_text[1]
             respect = split_text[3]
             lottery_check = split_text[5]
+            brawl_check = split_text[7].split(';')
 
     else:
         print(f'NEW -- {id}')
         with open(file, 'w') as f:
-            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0')
+            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0 Бравл_старс_герои: Шелли;Эдгар')
             money = 1600
             respect = -10
             lottery_check = '0'
+            brawl_check = ['Шелли', 'Эдгар']
     money = int(money)
     respect = int(respect)
 
-    if check == 'start':
+    if cmd == 'start':
         send_msg(id, 'Вы просыпаетесь. Время - 8:17')
         time.sleep(2)
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('Идти спaть', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Ебaшить в школу', VkKeyboardColor.POSITIVE)
         send_msg(id, '- ЕБАНАЯ КОЧЕРГА. МАТЬ ЕГО СУКА ЕБАЛ. ПИЗДОС НАХУЙ. Опять проспал\nААААААААААААААААААА', keyboard)
-    elif check == 'Спать':
+    elif cmd == 'Спать':
         send_msg(id, '- В пизду эту школу')
         time.sleep(2)
         send_msg(id, 'Время - 9:57')
@@ -58,12 +59,12 @@ def game(id, check):
         send_msg(id, '- Уффф, заебись поспал')
         time.sleep(2)
         game(id, 'Дом дела')
-    elif check == 'Дом дела':
+    elif cmd == 'Дом дела':
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('Поигрaть в дотку', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Поигрaть в дотку', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Так, чем бы заняться', keyboard)
-    elif check == 'Дота':
+    elif cmd == 'Дота':
         send_msg(id, 'Вы включаете компьютер')
         time.sleep(1)
         send_msg(id, 'Нажимаете на иконочку Dota 2')
@@ -81,8 +82,8 @@ def game(id, check):
         keyboard.add_button('Течис', VkKeyboardColor.POSITIVE)
         keyboard.add_button('СФ', VkKeyboardColor.POSITIVE)
         send_msg(id, '- Так, кого бы пикнуть...', keyboard)
-    elif check in dota_pick:
-        if check == 'Пудж':
+    elif cmd in dota_pick:
+        if cmd == 'Пудж':
             msg = f'Вы нахукались, набегались, напердели. Хата воняет говном. Обдристали своё кресло. Слили игру в салат. Счёт {random.randint(0, 4)}/{random.randint(14, 30)}/{random.randint(2, 8)}, стоит отметить, чуть лучше чем в последней катке'
             send_msg(id, msg)
             time.sleep(4)
@@ -90,7 +91,7 @@ def game(id, check):
             keyboard.add_button('Вздрочнуть', VkKeyboardColor.POSITIVE)
             keyboard.add_button('Поделать уроки', VkKeyboardColor.POSITIVE)
             send_msg(id, '- Чем бы еще заняться?', keyboard)
-        elif check == 'Течис':
+        elif cmd == 'Течис':
             msg = 'Вы пикаете эту трипл-ебало хуйню, засовываете огромный черный хуй в рот и катите телегу в лес.'
             send_msg(id, msg)
             time.sleep(3)
@@ -108,7 +109,7 @@ def game(id, check):
             keyboard.add_button('Ебaшить в школу', VkKeyboardColor.POSITIVE)
             send_msg(id, 'За окном утро', keyboard)
             time.sleep(3)
-        elif check == 'СФ':
+        elif cmd == 'СФ':
             msg = 'Включается [shadowraze - juggernaut]. Покупаете блинк, еул, бкб. Разносите всех и всё'
             send_msg(id, msg)
             time.sleep(4)
@@ -123,7 +124,7 @@ def game(id, check):
             keyboard.add_button('Вздрочнуть', VkKeyboardColor.POSITIVE)
             keyboard.add_button('Поделать уроки', VkKeyboardColor.POSITIVE)
             send_msg(id, '- Чем бы еще заняться?', keyboard)
-    elif check == 'Дрочка':
+    elif cmd == 'Дрочка':
         send_msg(id, 'Идете на похуях в ванну')
         time.sleep(2)
         send_msg(id, 'Включаете порнушку с бабушками')
@@ -141,13 +142,13 @@ def game(id, check):
         keyboard.add_button('Идти спaть', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Ебaшить в школу', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Просыпаетесь, затылок болит. Додрачиваете на ту порнуху. Что дальше?', keyboard)
-    elif check == 'Уроки':
+    elif cmd == 'Уроки':
         time.sleep(1)
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('Ебалаи, чо задали?', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Скажите пж домашку', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Заходите в чат своих балбесов (11"А")', keyboard)
-    elif check == 'ДЗ.1':
+    elif cmd == 'ДЗ.1':
         send_msg(id, '[Сообщение из беседы] Ты чо ахуел? Тебе ебало сломать?')
         time.sleep(2)
         send_msg(id, '[Вы] Заткнула рожу овца')
@@ -159,7 +160,7 @@ def game(id, check):
         send_msg(id, '- Ну и похуй, пойду дрочить')
         time.sleep(2)
         game(id, 'Дрочка')
-    elif check == 'ДЗ.2':
+    elif cmd == 'ДЗ.2':
         send_msg(id,
                  f'[Сообщение из беседы] По русскому учбеник упражнение 19,20,23.\nНаписать сочинение по теме "Почему русский язык такой пиздатый"\nПо математике номера с {random.randint(400, 500)} по {random.randint(505, 600)}\nПо литературе...')
         time.sleep(6)
@@ -170,7 +171,7 @@ def game(id, check):
         send_msg(id, '- Да идите вы все в пизду, пойду дрочить')
         time.sleep(3)
         game(id, 'Дрочка')
-    elif check == 'АУЕ':
+    elif cmd == 'АУЕ':
         a = random.randint(20, 40)
         b = random.randint(20, 50)
         c = random.randint(20, 60)
@@ -213,9 +214,9 @@ def game(id, check):
         time.sleep(2)
         with open(file, 'w') as f:
             print(f'UPDATE {file} -- {money} / {respect}')
-            f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check}')
+            f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
         game(id, 'Дорога в школу 2')
-    elif check == 'Деньги':
+    elif cmd == 'Деньги':
         find_money = random.randint(3, 13)
         total_new_money = 50 * find_money
         send_msg(id, f'ЕБАНУТЬСЯ. На дороге вы нашли {total_new_money} цинковых')
@@ -223,96 +224,118 @@ def game(id, check):
         send_msg(id, f'[Статы] Деньги: {money} => {int(money) + total_new_money} (+{total_new_money})')
         money += total_new_money
         with open(file, 'w') as f:
-            print(f'UPDATE {file} -- {money} / {respect}')
-            f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check}')
+            f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
         time.sleep(2)
         game(id, 'Дорога в школу 2')
-    elif check == 'Лотерея':
+    elif cmd == 'Лотерея':
         send_msg(id, 'Вы замечаете на дороге человека в черном плаще. Он что-то вам кричит')
         time.sleep(2)
         send_msg(id, 'Вы останавливаетесь')
         time.sleep(2)
         send_msg(id,'- Предлагаю тебе игру. Можешь и бабки поднять. А можешь и слить. Всё честно')
         game(id,'Лотерея. Чуть позже')
-    elif check == 'Лотерея. Чуть позже':
+    elif cmd == 'Лотерея. Чуть позже':
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('Сыграем!', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Ехать дальше', VkKeyboardColor.POSITIVE)
         send_msg(id,
                  f'Играем?\nСтавка - 50\n[Статы] Деньги: {money}',
                  keyboard)
-    elif check == 'Лотерея 1':
+    elif cmd == 'Лотерея 1':
+        keyboard = VkKeyboard(one_time=True)
+        keyboard.add_button('Угадай число', VkKeyboardColor.POSITIVE)
+        keyboard.add_button('Орёл - Решка', VkKeyboardColor.NEGATIVE)
+        send_msg(id, 'Во что сыграем?', keyboard)
+
+
+    elif cmd == 'Лотерея. Число':
         if money >= 50:
             send_msg(id, 'Деньги вперёд')
-            send_msg(id, f'[Статы] Деньги: {money} => {money - 50} (-50)')
+            send_msg(id, f'[Статы] Деньги: {money} => {money - 50} (-50)\n')
+            money -= 50
+            send_msg(id, 'Я загадал число от 1 до 10 (включительно)')
+            time.sleep(1)
+            lottery_num = random.randint(1, 10)
             with open(file, 'w') as f:
-                f.write(f'Деньги: {money-50} Репутация: {respect} Лотерея_чек: {lottery_check}')
-            money-=50
+                f.write(
+                    f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_num} Бравл_старс_герои: {";".join(brawl_check)}')
             keyboard = VkKeyboard(one_time=True)
-            keyboard.add_button('Угадай число', VkKeyboardColor.POSITIVE)
-            keyboard.add_button('Орёл - Решка', VkKeyboardColor.NEGATIVE)
-            send_msg(id, 'Во что сыграем?', keyboard)
+            keyboard.add_button('1 - 5', VkKeyboardColor.POSITIVE)
+            keyboard.add_button('6 - 10', VkKeyboardColor.POSITIVE)
+            send_msg(id, 'Угадай в какой половине оно находится', keyboard)
         else:
             send_msg(id, f'Ууу, Чел. У тебя {money} рублей. Нехватает на ставку. Пиздуй отсюда')
             time.sleep(2)
             game(id,'Дорога в школу 2')
 
-    elif check == 'Лотерея. Число':
-        send_msg(id, 'Я загадал число от 1 до 10 (включительно)')
-        time.sleep(2)
-        lottery_num = random.randint(1, 10)
-        with open(file, 'w') as f:
-            f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_num}')
-        keyboard = VkKeyboard(one_time=True)
-        keyboard.add_button('1 - 5', VkKeyboardColor.POSITIVE)
-        keyboard.add_button('6 - 10', VkKeyboardColor.POSITIVE)
-        send_msg(id, 'Угадай в какой половине оно находится', keyboard)
 
-    elif check == 'Лотерея. Число. 2':
+    elif cmd == 'Лотерея. Число. 2':
         if lottery_check == '0':
             send_msg(id, '[От админа] Ты ахуел? Абузер ебаный. Пошел ты нахуй. минус полопвина бабок тебе')
             send_msg(id, f'[Статы] Деньги: {money} => {int(money / 2)} (-{money - int(money / 2)})')
             with open(file, 'w') as f:
-                f.write(f'Деньги: {int(money / 2)} Репутация: {respect} Лотерея_чек: {lottery_check}')
+                f.write(f'Деньги: {int(money / 2)} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
             money = int(money / 2)
+            game(id, 'Дорога в школу 2')
 
         else:
             send_msg(id,f'Я загадал число {lottery_check}')
             if int(lottery_check) <= 5:
                 if txt == '1 - 5':
                     send_msg(id, 'Поздравляю, епта. Ты выиграл')
-                    time.sleep(3)
+                    time.sleep(1.5)
                     send_msg(id, f'[Статы] Деньги: {money} => {money + 100} (+100)')
                     money+=100
                 else:
                     send_msg(id, 'Мои поздрваления... для меня. Ты слил')
-                    time.sleep(2)
+                    time.sleep(1.5)
             elif int(lottery_check) > 5:
                 if txt == '6 - 10':
                     send_msg(id, 'Поздравляю, епта. Ты выиграл')
-                    time.sleep(2)
+                    time.sleep(1.5)
                     send_msg(id, f'[Статы] Деньги: {money} => {money + 100} (+100)')
                     money+=100
                 else:
                     send_msg(id, 'Мои поздрваления... для меня. Ты слил')
-                    time.sleep(2)
+                    time.sleep(1.5)
             with open(file, 'w') as f:
-                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: 0')
+                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: 0 Бравл_старс_герои: {";".join(brawl_check)}')
         time.sleep(3)
 
         game(id,'Лотерея. Чуть позже')
+    elif cmd == 'Лотерея. Монета':
+        if money >= 50:
+            send_msg(id, 'Деньги вперёд')
+            send_msg(id, f'[Статы] Деньги: {money} => {money - 50} (-50)\n')
+            money -= 50
+            send_msg(id, 'Человек в плаще кидает монету')
+            time.sleep(1)
+            send_msg(id, 'Ловит её и бьёт ею об другую руку')   
+            time.sleep(1.7)
+            lottery_monet = random.choice(['Орёл', 'Решка'])
+            with open(file, 'w') as f:
+                f.write(
+                    f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_monet} Бравл_старс_герои: {";".join(brawl_check)}')
+            keyboard = VkKeyboard(one_time=True)
+            keyboard.add_button('Орёл', VkKeyboardColor.POSITIVE)
+            keyboard.add_button('Решка', VkKeyboardColor.POSITIVE)
+            send_msg(id, 'Угадай, что выпало?', keyboard)
+        else:
+            send_msg(id, f'Ууу, Чел. У тебя {money} рублей. Нехватает на ставку. Пиздуй отсюда')
+            time.sleep(2)
+            game(id,'Дорога в школу 2')
 
-    elif check == 'Дорога в школу':
+    elif cmd == 'Дорога в школу':
         send_msg(id, 'Вы запрыгиваете на велосипед и хуярите в школу')
         time.sleep(2)
         # random
-        x = ['Лотерея', 'Деньги', 'АУЕ', 'Лотерея','','','','','','','','','','','','']
+        x = ['Лотерея', 'Деньги', 'АУЕ', 'Лотерея','','','','','','','']
         rnd = random.choice(x)
         if rnd == '':
             game(id, 'Дорога в школу 2')
         else:
             game(id, rnd)
-    elif check == 'Дорога в школу 2':
+    elif cmd == 'Дорога в школу 2':
         send_msg(id, 'Приезжаете, кидаете двухколесного на землю, у вас литература, забегаете в кабинет')
         time.sleep(2)
         keyboard = VkKeyboard(one_time=True)
@@ -328,7 +351,7 @@ def game(id, check):
 
 
 
-    elif check == 'Заход.1':
+    elif cmd == 'Заход.1':
         send_msg(id,
                  '[Училка орёт] Какого, мать его, хера. Ты - маленький гавнюк опять опоздал на мой урок. Я УСТАЛА ПОВТОРЯТЬ...')
         time.sleep(3)
@@ -337,7 +360,7 @@ def game(id, check):
         keyboard.add_button('Дослушать высеры', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Дальнейшие действия?', keyboard)
         time.sleep(2)
-    elif check == 'Заход.1.1':
+    elif cmd == 'Заход.1.1':
         send_msg(id, 'Пока она орет какую - то хуйню вы пафосно достаете кошелек')
         time.sleep(2)
         if money >= 500:
@@ -354,7 +377,7 @@ def game(id, check):
             respect += rnd
             with open(file, 'w') as f:
                 print(f'UPDATE {file} -- {money} / {respect}')
-                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check}')
+                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
             time.sleep(2)
             game(id, 'На уроке. Крутой')
         else:
@@ -371,10 +394,10 @@ def game(id, check):
             respect -= rnd
             with open(file, 'w') as f:
                 print(f'UPDATE {file} -- {money} / {respect}')
-                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check}')
+                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
             time.sleep(2)
             game(id, 'На уроке. Не крутой')
-    elif check == 'Заход.1.2':
+    elif cmd == 'Заход.1.2':
         send_msg(id, 'Вас обхуесосили с пяток до печени')
         time.sleep(2)
         keyboard = VkKeyboard(one_time=True)
@@ -382,31 +405,34 @@ def game(id, check):
         keyboard.add_line()
         keyboard.add_button('Можно пойти на место?', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Что скажите?', keyboard)
-    elif check == 'Заход.2':
+    elif cmd == 'Заход.2':
         send_msg(id, 'Учитель встал с места: ветер с тобой бродяга')
         time.sleep(2.4)
         send_msg(id, 'Вы на выебонах садитесь на своё место. Весь класс в ахуе, смотрит на тебя')
         time.sleep(4)
         game(id, 'На уроке. Крутой')
-    elif check == 'На уроке. Крутой':
+    elif cmd == 'На уроке. Крутой':
         keyboard = VkKeyboard(one_time=True)
-        keyboard.add_button('Зайти в Брaвл Старс', VkKeyboardColor.POSITIVE)
-        keyboard.add_button('Позалипать на одноклассниц', VkKeyboardColor.POSITIVE)
+        keyboard.add_button('Зайти в Бравл Старс', VkKeyboardColor.POSITIVE)
+        if respect>=40:
+            keyboard.add_button('Позалипать на одноклассниц', VkKeyboardColor.POSITIVE)
+        else:
+            keyboard.add_button('Позалипать на одноклассниц 40+', VkKeyboardColor.NEGATIVE)
         keyboard.add_line()
         keyboard.add_button('Попиздиться', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Слушать урок', VkKeyboardColor.POSITIVE)
-        send_msg(id, 'Бля, чем бы заняться', keyboard)
-    elif check == 'На уроке. Не крутой':
+        send_msg(id, 'Сегодня вы в ударе\n\nБля, чем бы заняться', keyboard)
+    elif cmd == 'На уроке. Не крутой':
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('Зайти в Бравл Старс', VkKeyboardColor.POSITIVE)
         keyboard.add_button('Слушать урок', VkKeyboardColor.POSITIVE)
         send_msg(id, 'Бля, чем бы заняться', keyboard)
-    elif check == 'Послать учителя':
+    elif cmd == 'Послать учителя':
         send_msg(id, '[Сообщение от Бога] Чувак, даже не думай, я и сам её боюсь. Лучше молча сядь на место')
         time.sleep(3)
         send_msg(id, 'Вы садитесь за свою парту')
         game(id, 'На уроке. Не крутой')
-    elif check == 'Идти на место':
+    elif cmd == 'Идти на место':
         send_msg(id, '"Можно" мать твою выебать, а если хочешь сесть, то "разрешите пожалуйста"')
         time.sleep(3)
         send_msg(id,
@@ -414,7 +440,7 @@ def game(id, check):
         time.sleep(3.4)
         send_msg(id, 'Садитесь на место')
         game(id, 'На уроке. Не крутой')
-    elif check == 'Урок':
+    elif cmd == 'Урок':
         send_msg(id, 'Пиздит')
         time.sleep(0.7)
         send_msg(id, 'Пиздит')
@@ -425,12 +451,12 @@ def game(id, check):
         keyboard.add_button('Идти домой', VkKeyboardColor.POSITIVE)
         keyboard.add_line()
 
-        x = random.choice(['','','','','','','','','','','','','','','','','','','','', 'Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Обстрел'])
+        x = random.choice(['','','','','','','','','','','','','','','','','','','','','','','','','','', 'Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Зачёт','Обстрел'])
         if x == '':
             if respect >= 50:
                 keyboard.add_button('Погулять с одноклами', VkKeyboardColor.POSITIVE)
             else:
-                keyboard.add_button('Погулять с одноклами', VkKeyboardColor.NEGATIVE)
+                keyboard.add_button('Погулять с одноклами 50+', VkKeyboardColor.NEGATIVE)
             send_msg(id, 'Мымра напизделась. Звонок. Уроки закончились', keyboard)
         elif x == 'Зачёт':
             send_msg(id, 'До конца урока 4 минуты')
@@ -455,7 +481,7 @@ def game(id, check):
             time.sleep(3)
             with open(file, 'w') as f:
                 print(f'UPDATE {file} -- {money} / {respect}')
-                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check}')
+                f.write(f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
             if respect >= 50:
                 keyboard.add_button('Погулять с одноклами', VkKeyboardColor.POSITIVE)
             else:
@@ -469,9 +495,9 @@ def game(id, check):
             time.sleep(1)
             send_msg(id, 'Училка открывает дверь')
             time.sleep(1)
-            send_msg(id, '...')
+            send_msg(id, '[ВЫСТРЕЛ]')
             time.sleep(1)
-            send_msg(id, 'Кровь этой паскуды размазалась по всем окнам')
+            send_msg(id, 'Кровь этой твари размазалась по всем окнам и по отличнице с первой парты')
             time.sleep(3)
             send_msg(id, 'В класс входит голубоглазый блондин с M134 Minigun')
             time.sleep(2)
@@ -483,7 +509,7 @@ def game(id, check):
 
 
 
-    elif check == 'Гулять':
+    elif cmd == 'Гулять':
         time.sleep(2)
         if respect >= 50:
             send_msg(id, 'Эту ветку я еще не доделал. ПОэтому мы идем пока что домой')
@@ -495,7 +521,7 @@ def game(id, check):
             send_msg(id, 'Поэтому ты идёшь домой')
             time.sleep(2)
             game(id, 'Дом дела')
-    elif check == 'Голый':
+    elif cmd == 'Голый':
         send_msg(id, 'На ваших глазах он расстреливает весь класс')
         time.sleep(2)
         send_msg(id, 'Скидывает абмундирование и встает рядом с вами')
@@ -506,17 +532,17 @@ def game(id, check):
         time.sleep(2)
         send_msg(id, 'Разворачивается...')
         time.sleep(2)
-        send_msg(id, 'Cum Выстрел.')
+        send_msg(id, 'CumShot')
         time.sleep(2)
         send_msg(id, '[Вы умерли от прострела головы]')
         time.sleep(1)
         send_msg(id, '[Получено достижение: CumDead]')
         time.sleep(2)
         with open(file, 'w') as f:
-            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0')
+            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0 Бравл_старс_герои: Шелли;Эдгар')
         send_msg(id,'[Статы обновлены] Деньги: 1600 Репутация: -10')
-    elif check == 'Таран':
-        send_msg(id, 'Вы хватаете стол в руки и бежите на него')
+    elif cmd == 'Таран':
+        send_msg(id, 'Вы хватаете стол в руки и бежите на него. С криками "АААААААААААААААААА"')
         time.sleep(2)
         send_msg(id, 'Мгновенно наступила тишина')
         time.sleep(2)
@@ -526,19 +552,95 @@ def game(id, check):
         time.sleep(2)
         send_msg(id, 'Вы извиняетесь. Ставите стол на место')
         time.sleep(2)
-        send_msg(id, '[Блондин достает "Винторез" и делает точный выстрел вам в лицо]')
+        send_msg(id, 'Блондин кладет Миниган на пол и отходит немного от вас (вероятно, испугался)')
+        time.sleep(3)
+        send_msg(id, 'Всё. Это победа! Вы спасли школу ')
+        time.sleep(6)
+        send_msg(id, '[Блондин достает "Винторез"]')
+        time.sleep(2)
+        send_msg(id, '[Точечный еджиничный выстрел]')
         time.sleep(2)
         send_msg(id, '[Мгновенная смерть]')
         time.sleep(2)
         send_msg(id, '[Получено достижение: +420]')
         time.sleep(2)
         with open(file, 'w') as f:
-            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0')
+            f.write(f'Деньги: 1600 Репутация: -10 Лотерея_чек: 0 Бравл_старс_герои: Шелли;Эдгар')
         send_msg(id,'[Статы обновлены] Деньги: 1600 Репутация: -10')
         time.sleep(5)
         keyboard = VkKeyboard(one_time=True)
         keyboard.add_button('start', VkKeyboardColor.SECONDARY)
         send_msg(id,'Чтобы начать новую игру нажмите start',keyboard)
+    elif cmd == 'Бравл Старс':
+        keyboard = VkKeyboard(one_time=True)
+        keyboard.add_button('Открыть ящик', VkKeyboardColor.POSITIVE)
+        keyboard.add_button('Сыграть ШД', VkKeyboardColor.POSITIVE)
+        keyboard.add_button('Слушать урок', VkKeyboardColor.POSITIVE)
+        send_msg(id, 'Что дальше?', keyboard)
+    elif cmd == 'Ящики':
+        gifts=['250 монет', 'Мать котова', 'ЭЛЬ_ПРИМО', 'Эдгар', 'Шелли','10 гемов', '100 монет', 'Падж', 'Батины пантолоны', 'Труханы деда', 'Гаджет на шелли', '20 рублей', 'Хер моржа', 'Скин на Шелли', 'Пачка гандонов', 'Отбойный молоток', 'Прах прадеда']
+        a = random.choice(gifts)
+        gifts.remove(a)
+        b = random.choice(gifts)
+        gifts.remove(b)
+        c = random.choice(gifts)
+        if a in ['ЭЛЬ_ПРИМО', 'Эдгар', 'Шелли', 'Падж']:
+            if a in brawl_check:
+                a_text = f'1) {random.randint(10, 60)} очков силы {a}'
+            else:
+                a_text = f'1) НОВЫЙ СУКА ГЕРООООЙ ({a})!'
+                brawl_check.append(a)
+        else:
+            a_text = f'1) {a}'
+
+        if b in ['ЭЛЬ_ПРИМО', 'Эдгар', 'Шелли','Падж']:
+            if b in brawl_check:
+                b_text=f'2) {random.randint(10,60)} очков силы {b}'
+            else:
+                b_text=f'2) НОВЫЙ СУКА ГЕРООООЙ ({b})!'
+                brawl_check.append(b)
+        else:
+            b_text=f'2) {b}'
+
+        if c in ['ЭЛЬ_ПРИМО', 'Эдгар', 'Шелли','Падж']:
+            if c in brawl_check:
+                c_text=f'3) {random.randint(10,60)} очков силы {c}'
+            else:
+                c_text=f'3) НОВЫЙ СУКА ГЕРООООЙ ({c})!'
+                brawl_check.append(c)
+        else:
+            c_text=f'3) {c}'
+
+        send_msg(id, 'Ваш лут:')
+        time.sleep(1.5)
+        send_msg(id, a_text)
+        time.sleep(1.5)
+        send_msg(id, b_text)
+        time.sleep(1.5)
+        send_msg(id, c_text)
+        time.sleep(1.5)
+        if a == '20 рублей' or b == '20 рублей' or c == '20 рублей':
+            send_msg(id,f'[Статы] Деньги: {money} ==> {money+20} (+20)')
+            money += 20
+        with open(file, 'w') as f:
+            f.write(
+                f'Деньги: {money} Репутация: {respect} Лотерея_чек: {lottery_check} Бравл_старс_герои: {";".join(brawl_check)}')
+        game(id,'Бравл Старс')
+    elif cmd == 'ШД':
+        keyboard = VkKeyboard(one_time=True)
+        i=0
+        for hero in brawl_check:
+            if i%2==0 and i!=0:
+                keyboard.add_line()
+                print('-----------------')
+            keyboard.add_button(hero, VkKeyboardColor.POSITIVE)
+            print(hero)
+            i+=1
+        print(keyboard)
+        send_msg(id,'Выберите пик',keyboard)
+
+
+
 
 
 # Бравл старс. Сундук. Игра для крутых. Игра для лохов
@@ -597,8 +699,6 @@ for event in longpoll.listen():
                 game(id, 'Заход.1.2')
             elif txt == 'Вечер в хату, бродяги':
                 game(id, 'Заход.2')
-            elif txt == 'Зайти в Брaвл Старс':
-                game(id, 'Brawl. Крутой')
             elif txt == 'Позалипать на одноклассниц':
                 game(id, 'Пялиться')
             elif txt == 'Попиздиться':
@@ -619,9 +719,25 @@ for event in longpoll.listen():
                 game(id, 'Лотерея 1')
             elif txt == 'Угадай число':
                 game(id, 'Лотерея. Число')
+            elif txt == 'Орёл - Решка':
+                game(id,'Лотерея. Монета')
             elif txt == '1 - 5' or txt == '6 - 10':
                 game(id, 'Лотерея. Число. 2')
             elif txt == 'Раздеться и начать дрочить':
                 game(id, 'Голый')
             elif txt == 'Идти на таран со столом':
                 game(id, 'Таран')
+            elif txt == 'Зайти в Бравл Старс':
+                game(id,'Бравл Старс')
+            elif txt == 'Открыть ящик':
+                game(id,'Ящики')
+            elif txt == 'Позалипать на одноклассниц 40+':
+                send_msg(id,'Нужна репутация 40+')
+                time.sleep(1)
+                game(id,'На уроке. Крутой')
+            elif txt == 'Позалипать на одноклассниц':
+                pass
+            elif txt == 'Попиздиться':
+                game(id,'Драка.1')
+            elif txt == 'Сыграть ШД':
+                game(id, 'ШД')
